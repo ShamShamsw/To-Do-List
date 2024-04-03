@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To-Do List</title>
+<style>
+    body {
+        font-family: Arial, sans-serif; 
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    th input {
+        width: 100%;
+    }
+    .completed {
+        text-decoration: line-through;
+    }
+</style>
+</head>
+<body>
+    <h1>To-Do List</h1>
+    <button onclick="addNewTask()">New Task</button>
+    <table id="taskTable">
+        <tr>
+            <th><input type="checkbox" id="selectAll" onclick="selectAll()"></th>
+            <th onclick="enableColumnEdit('Task')">Task</th>
+            <th onclick="enableColumnEdit('Status')">Status</th>
+            <th onclick="enableColumnEdit('DueDate')">Due Date</th>
+        </tr>
+        <!-- Example rows will be added here -->
+    </table>
+    
+    <h1>Completed Tasks</h1>
+    <button onclick="addTaskComplete()">Completed Task</button>
+    <table id="completedTaskTable">
+        <tr>
+            <th onclick="enableColumnEditComplete('Task')">Task</th>
+            <th onclick="enableColumnEditComplete('Date')">Due Date</th>
+        </tr>
+        <!-- Example rows will be added here -->
+
+    <script>
+        let taskId = 1;
+
+        function selectAll() {
+            const checkboxes = document.querySelectorAll('#taskTable input[type="checkbox"]');
+            const selectAllCheckbox = document.getElementById('selectAll');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        }
+
+        function enableColumnEdit(columnName) {
+            const th = document.querySelector(`#taskTable th[data-column="${columnName}"]`);
+            const currentText = th.textContent.trim();
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentText;
+            input.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    updateColumnName(columnName, input.value);
+                }
+            });
+            th.innerHTML = '';
+            th.appendChild(input);
+            input.focus();
+        }
+
+        function enableColumnEditComplete(columnName) {
+            const th = document.querySelector(`#completedTaskTable th[data-column="${columnName}"]`);
+            const currentText = th.textContent.trim();
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentText;
+            input.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    updateColumnName(columnName, input.value);
+                }
+            });
+            th.innerHTML = '';
+            th.appendChild(input);
+            input.focus();
+        }
+
+        function updateColumnName(columnName, newColumnName) {
+            const th = document.querySelector(`#taskTable th[data-column="${columnName}"]`);
+            th.textContent = newColumnName;
+        }
+
+        function updateColumnNameComplete(columnName, newColumnName) {
+            const th = document.querySelector(`#completedTaskTable th[data-column="${columnName}"]`);
+            th.textContent = newColumnName;
+        }
+
+
+        function addNewTask() {
+            const taskTable = document.getElementById('taskTable');
+            const newRow = taskTable.insertRow(-1);
+
+            const checkboxCell = newRow.insertCell(0);
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkboxCell.appendChild(checkbox);
+
+            const taskCell = newRow.insertCell(1);
+            const taskText = document.createTextNode('New Task');
+            taskCell.appendChild(taskText);
+            taskCell.onclick = function() {
+                const newTaskName = prompt('Enter new task name:');
+                if (newTaskName !== null && newTaskName.trim() !== '') {
+                    taskCell.textContent = newTaskName;
+                }
+            };
+
+            const statusCell = newRow.insertCell(2);
+            const statusDropdown = document.createElement('select');
+            statusDropdown.innerHTML = `
+                <option value="Done">Done</option>
+                <option value="Working on it">Working on it</option>
+                <option value="Not Done">Not Done</option>
+            `;
+            statusCell.appendChild(statusDropdown);
+
+            const dueDateCell = newRow.insertCell(3);
+            const today = new Date().toISOString().slice(0, 10);
+            const dueDateText = document.createTextNode(today);
+            dueDateCell.appendChild(dueDateText);
+            dueDateCell.onclick = function() {
+                const newTaskName = prompt('Enter new task name:');
+                if (newTaskName !== null && newTaskName.trim() !== '') {
+                    dueDateCell.textContent = newTaskName;
+                }
+            };
+        }
+
+        function addTaskComplete() {
+            const taskTable = document.getElementById('completedTaskTable');
+            const newRow = taskTable.insertRow(-1);
+
+            const taskCell = newRow.insertCell(0);
+            const taskText = document.createTextNode('New Task');
+            taskCell.appendChild(taskText);
+            taskCell.onclick = function() {
+                const newTaskName = prompt('Enter new task name:');
+                if (newTaskName !== null && newTaskName.trim() !== '') {
+                    taskCell.textContent = newTaskName;
+                }
+            };
+
+            const dueDateCell = newRow.insertCell(1);
+            const today = new Date().toISOString().slice(0, 10);
+            const dueDateText = document.createTextNode(today);
+            dueDateCell.appendChild(dueDateText);
+            dueDateCell.onclick = function() {
+                const newTaskName = prompt('Enter new task name:');
+                if (newTaskName !== null && newTaskName.trim() !== '') {
+                    dueDateCell.textContent = newTaskName;
+                }
+            };
+            
+
+            
+        }
+
+
+        
+    </script>
+</body>
+</html>
